@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> Starting: Server Start
+    Starting --> Initializing: Load Config
+    Initializing --> RegisteringRoutes: Setup Routes
+    RegisteringRoutes --> ApplyingMiddleware: Add Middleware
+    ApplyingMiddleware --> Running: Listen on Port 8080
+    
+    Running --> Processing: Incoming Request
+    Processing --> Running: Response Sent
+    
+    Running --> ShuttingDown: SIGINT/SIGTERM
+    ShuttingDown --> GracefulShutdown: Wait for Requests (30s)
+    GracefulShutdown --> [*]: Server Stopped
+    
+    Processing --> Error: Request Failed
+    Error --> Running: Log Error
