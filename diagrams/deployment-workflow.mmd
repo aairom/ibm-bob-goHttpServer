@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant Dev as Developer
+    participant Docker as Docker
+    participant Minikube as Minikube
+    participant K8s as Kubernetes
+    participant Pod as Pod
+    
+    Dev->>Docker: Build Image<br/>(multi-stage)
+    Docker->>Docker: Stage 1: Build Go Binary
+    Docker->>Docker: Stage 2: Create Alpine Image
+    Docker-->>Dev: Image Ready
+    
+    Dev->>Minikube: eval $(minikube docker-env)
+    Dev->>Docker: Build in Minikube
+    Docker-->>Minikube: Image Available
+    
+    Dev->>K8s: kubectl apply deployment.yaml
+    K8s->>Pod: Create 2 Replicas
+    Pod->>Pod: Run Health Checks
+    Pod-->>K8s: Ready
+    
+    Dev->>K8s: kubectl apply service.yaml
+    K8s->>K8s: Create NodePort Service
+    K8s-->>Dev: Service Available :30080
+    
+    Dev->>Minikube: minikube service go-http-server
+    Minikube-->>Dev: Open Browser
