@@ -1,0 +1,40 @@
+flowchart TD
+    Start([HTTP Request]) --> CORS{CORS<br/>Middleware}
+    CORS -->|Add Headers| Log{Logging<br/>Middleware}
+    Log -->|Log Request| Route{Route<br/>Handler}
+    
+    Route -->|/| Home[Home Handler]
+    Route -->|/health| Health[Health Handler]
+    Route -->|/api/info| Info[Info Handler]
+    Route -->|/api/echo| Echo[Echo Handler]
+    Route -->|/api/data| Data[Data Handler]
+    
+    Home --> JSON1[Encode JSON]
+    Health --> JSON2[Encode JSON]
+    Info --> JSON3[Encode JSON]
+    Echo --> Valid{Valid<br/>Query?}
+    Data --> Method{POST<br/>Method?}
+    
+    Valid -->|Yes| JSON4[Encode JSON]
+    Valid -->|No| Err1[400 Error]
+    
+    Method -->|Yes| Parse{Valid<br/>JSON?}
+    Method -->|No| Err2[405 Error]
+    
+    Parse -->|Yes| JSON5[201 Created]
+    Parse -->|No| Err3[400 Error]
+    
+    JSON1 --> End([Response])
+    JSON2 --> End
+    JSON3 --> End
+    JSON4 --> End
+    JSON5 --> End
+    Err1 --> End
+    Err2 --> End
+    Err3 --> End
+    
+    style Start fill:#e1f5ff
+    style End fill:#e1f5ff
+    style CORS fill:#fff4e1
+    style Log fill:#fff4e1
+    style Route fill:#f3e5f5
