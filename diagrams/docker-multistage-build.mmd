@@ -1,0 +1,19 @@
+graph TB
+    subgraph "Stage 1: Builder (golang:1.21-alpine)"
+        S1[Copy go.mod] --> S2[Download Dependencies]
+        S2 --> S3[Copy main.go]
+        S3 --> S4[Build Static Binary<br/>CGO_ENABLED=0]
+        S4 --> Binary[server binary<br/>~15MB]
+    end
+    
+    subgraph "Stage 2: Runtime (alpine:latest)"
+        R1[Install ca-certificates] --> R2[Create Non-Root User]
+        R2 --> R3[Copy Binary from Builder]
+        R3 --> R4[Set Permissions]
+        R4 --> Final[Final Image<br/>~15MB]
+    end
+    
+    Binary -.->|Copy| R3
+    
+    style Binary fill:#e8f5e9
+    style Final fill:#e8f5e9
