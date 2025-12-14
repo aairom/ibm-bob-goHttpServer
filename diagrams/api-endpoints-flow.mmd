@@ -1,0 +1,33 @@
+graph LR
+    Client[Client] --> Router{HTTP Router}
+    
+    Router -->|GET /| Home[Home Handler<br/>Welcome Message]
+    Router -->|GET /health| Health[Health Handler<br/>Status & Uptime]
+    Router -->|GET /api/info| Info[Info Handler<br/>Server Info]
+    Router -->|GET /api/echo| Echo[Echo Handler<br/>Message Echo]
+    Router -->|POST /api/data| Data[Data Handler<br/>JSON Processing]
+    
+    Home --> MW1[CORS Middleware]
+    Health --> MW2[CORS Middleware]
+    Info --> MW3[CORS Middleware]
+    Echo --> MW4[CORS Middleware]
+    Data --> MW5[CORS Middleware]
+    
+    MW1 --> Log1[Logging Middleware]
+    MW2 --> Log2[Logging Middleware]
+    MW3 --> Log3[Logging Middleware]
+    MW4 --> Log4[Logging Middleware]
+    MW5 --> Log5[Logging Middleware]
+    
+    Log1 --> Resp1[JSON Response]
+    Log2 --> Resp2[JSON Response]
+    Log3 --> Resp3[JSON Response]
+    Log4 --> Resp4[JSON Response]
+    Log5 --> Resp5[JSON Response]
+    
+    style Router fill:#fff4e1
+    style Home fill:#e8f5e9
+    style Health fill:#e8f5e9
+    style Info fill:#e8f5e9
+    style Echo fill:#e8f5e9
+    style Data fill:#e8f5e9
