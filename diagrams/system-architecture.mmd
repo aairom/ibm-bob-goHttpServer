@@ -1,0 +1,32 @@
+graph TB
+    subgraph "Client Layer"
+        Client[Client/Browser]
+    end
+    
+    subgraph "Kubernetes Cluster (Minikube)"
+        Service[Service<br/>NodePort :30080]
+        
+        subgraph "Deployment (2 Replicas)"
+            Pod1[Pod 1<br/>go-http-server]
+            Pod2[Pod 2<br/>go-http-server]
+        end
+    end
+    
+    subgraph "Container"
+        App[Go HTTP Server<br/>:8080]
+        Health[Health Checks<br/>Liveness/Readiness]
+    end
+    
+    Client -->|HTTP Request| Service
+    Service -->|Load Balance| Pod1
+    Service -->|Load Balance| Pod2
+    Pod1 --> App
+    Pod2 --> App
+    App -.->|Probe| Health
+    
+    style Client fill:#e1f5ff
+    style Service fill:#fff4e1
+    style Pod1 fill:#e8f5e9
+    style Pod2 fill:#e8f5e9
+    style App fill:#f3e5f5
+    style Health fill:#fce4ec
